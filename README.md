@@ -19,17 +19,17 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 contract MyToken is ERC20 {
     address public owner;
 
-    modifier onlyOwner() {
+    modifier Owner() {
         require(msg.sender == owner, "Only owner can call this function");
         _;
     }
 
     constructor() ERC20("MyToken", "MTK") {
         owner = msg.sender;
-        _mint(msg.sender, 1000000 * 10 ** decimals());
+        _mint(msg.sender, 100000 * 10 ** decimals());
     }
 
-    function mint(address to, uint256 amount) external onlyOwner {
+    function mint(address to, uint256 amount) external Owner {
         _mint(to, amount);
     }
 
