@@ -19,7 +19,7 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 contract MyToken is ERC20 {
     address public owner;
 
-    modifier Owner() {
+    modifier onlyOwner() {
         require(msg.sender == owner, "Only owner can call this function");
         _;
     }
@@ -29,15 +29,20 @@ contract MyToken is ERC20 {
         _mint(msg.sender, 100000 * 10 ** decimals());
     }
 
-    function mint(address to, uint256 amount) external Owner {
+    function mint(address to, uint256 amount) external onlyOwner {
         _mint(to, amount);
     }
 
     function burn(uint256 amount) external {
         _burn(msg.sender, amount);
     }
-}
 
+    function transferFrom(address sender, address recipient, uint256 amount) public override returns (bool) {
+        _transfer(sender, recipient, amount);
+        _approve(sender, msg.sender, allowance(sender, msg.sender) - amount);
+        return true;
+    }
+}
 ```
 
 To compile the code, click on the "Solidity Compiler" tab in the left-hand sidebar. Make sure the "Compiler" option is set to "0.8.18" (or another compatible version), and then click on the "Compile myToken.sol" button.
