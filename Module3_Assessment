@@ -4,15 +4,15 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
 contract MyToken is ERC20 {
-    address public owner;
+    address public tokenOwner;
 
     modifier onlyOwner() {
-        require(msg.sender == owner, "Only owner can call this function");
+        require(msg.sender == tokenOwner, "Only owner can call this function");
         _;
     }
 
     constructor() ERC20("MyToken", "MTK") {
-        owner = msg.sender;
+        tokenOwner = msg.sender;
         _mint(msg.sender, 1000000 * 10 ** decimals());
     }
 
@@ -24,14 +24,14 @@ contract MyToken is ERC20 {
         _burn(msg.sender, amount);
     }
 
-    function transfer(address to, uint256 amount) external returns (bool) {
-        _transfer(msg.sender, to, amount);
+    function transfer(address to, uint256 amount) public override returns (bool) {
+        _transfer(_msgSender(), to, amount);
         return true;
     }
 
-    function transferFrom(address sender, address recipient, uint256 amount) external returns (bool) {
+    function transferFrom(address sender, address recipient, uint256 amount) public override returns (bool) {
         _transfer(sender, recipient, amount);
-        _approve(sender, msg.sender, allowance(sender, msg.sender) - amount);
+        _approve(sender, _msgSender(), allowance(sender, _msgSender()) - amount);
         return true;
     }
 }
