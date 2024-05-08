@@ -23,4 +23,15 @@ contract MyToken is ERC20 {
     function burn(uint256 amount) external {
         _burn(msg.sender, amount);
     }
+
+    function transfer(address to, uint256 amount) external returns (bool) {
+        _transfer(msg.sender, to, amount);
+        return true;
+    }
+
+    function transferFrom(address sender, address recipient, uint256 amount) external returns (bool) {
+        _transfer(sender, recipient, amount);
+        _approve(sender, msg.sender, allowance(sender, msg.sender) - amount);
+        return true;
+    }
 }
