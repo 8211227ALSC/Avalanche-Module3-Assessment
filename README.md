@@ -26,7 +26,7 @@ contract MyToken is ERC20 {
 
     constructor() ERC20("MyToken", "MTK") {
         owner = msg.sender;
-        _mint(msg.sender, 100000 * 10 ** decimals());
+        _mint(msg.sender, 1000000 * 10 ** decimals());
     }
 
     function mint(address to, uint256 amount) external onlyOwner {
@@ -37,7 +37,12 @@ contract MyToken is ERC20 {
         _burn(msg.sender, amount);
     }
 
-    function transferFrom(address sender, address recipient, uint256 amount) public override returns (bool) {
+    function transfer(address to, uint256 amount) external returns (bool) {
+        _transfer(msg.sender, to, amount);
+        return true;
+    }
+
+    function transferFrom(address sender, address recipient, uint256 amount) external returns (bool) {
         _transfer(sender, recipient, amount);
         _approve(sender, msg.sender, allowance(sender, msg.sender) - amount);
         return true;
